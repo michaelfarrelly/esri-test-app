@@ -7,9 +7,10 @@ import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer.js";
 import KMLLayer from "@arcgis/core/layers/KMLLayer.js";
 import esriConfig from "@arcgis/core/config";
 import LayerList from "@arcgis/core/widgets/LayerList.js";
+import Legend from "@arcgis/core/widgets/Legend.js";
 
 function createGeoJsonBlobUrl(geojson: any): string {
-    // create a new blob from geojson featurecollection
+    // create a new blob from geojson feature collection
     const blob = new Blob([JSON.stringify(geojson)], {
         type: "application/json",
     });
@@ -37,12 +38,12 @@ function App() {
         });
 
         // GeoJSON from URL
-        const geojsonlayer = new GeoJSONLayer({
+        const geojsonLayer = new GeoJSONLayer({
             url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson",
             copyright: "USGS Earthquakes",
             title: "USGS Earthquakes", // LayerList title
         });
-        webmap.add(geojsonlayer);
+        webmap.add(geojsonLayer);
 
         // if the geojson isn't from a URL, but in memory:
 
@@ -80,7 +81,7 @@ function App() {
         });
         webmap.add(layer);
 
-        // KML from URL (possibly must be from a public url as the localhost KML_1.kml doesnt work.)
+        // KML from URL (possibly must be from a public url as the localhost KML_1.kml doesn't work.)
         const kmlLayer = new KMLLayer({
             url: "https://raw.githubusercontent.com/mapbox/Simple-KML/master/sample/example.kml", // url to the service
             title: "KML Samples",
@@ -88,10 +89,14 @@ function App() {
         webmap.add(kmlLayer); // adds the layer to the map
 
         // List of layers
-        let layerList = new LayerList({
+        const layerList = new LayerList({
             view: view,
         });
         view.ui.add(layerList, { position: "top-right" });
+        const legend = new Legend({
+            view: view,
+        });
+        view.ui.add(legend, { position: "top-right" });
 
         // Print service
         const print = new Print({
